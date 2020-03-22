@@ -1,12 +1,18 @@
 <template>
   <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </div>
+    <nav id="nav">
+      <router-link to="/about">< mehr über</router-link>
+    </nav>
     <router-view/>
   </div>
 </template>
+
+<script>
+import './assets/seedrandom.js'
+export default {
+  name: 'App'
+}
+</script>
 
 <style lang="scss">
 #app {
@@ -18,7 +24,8 @@
 }
 
 #nav {
-  padding: 30px;
+  position: relative;
+  z-index: 99;
 
   a {
     font-weight: bold;
