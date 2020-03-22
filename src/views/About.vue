@@ -1,11 +1,23 @@
 <template>
 	<div class="about">
-		<h1>This is an about page</h1>
+		<Plot id="plot"/>
 	</div>
 </template>
 
 <script>
+import Plot from '@/components/Plot.vue'
+
 export default {
-	name: 'About'
+	name: 'About',
+	components: {
+		Plot
+	}
 }
 </script>
+
+<style lang="scss">
+#plot {
+	width: 800px;
+	height: 600px;
+}
+</style>
