@@ -1,0 +1,2 @@
+(window["webpackJsonp"]=window["webpackJsonp"]||[]).push([["about"],{"5f83":function(t,n,o){},f26d:function(t,n,o){"use strict";var a=o("5f83"),e=o.n(a);e.a},f820:function(t,n,o){"use strict";o.r(n);var a=function(){var t=this,n=t.$createElement,o=t._self._c||n;return o("div",{staticClass:"about"},[o("Plot",{attrs:{id:"plot"}})],1)},e=[],s=o("2ed2"),u={name:"About",components:{Plot:s["a"]}},c=u,l=(o("f26d"),o("2877")),i=Object(l["a"])(c,a,e,!1,null,null,null);n["default"]=i.exports}}]);
+//# sourceMappingURL=about.229fbbf7.js.map
