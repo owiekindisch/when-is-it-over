@@ -1,8 +1,8 @@
 <template>
 	<div id="whenisitover">
-		<header class="head">
+		<header :class="['head',{isStart}]">
 			<div class="title">when is it over</div>
-			<div class="about" ref="about">
+			<div class="about infobox" ref="about">
 				<div class="more">
 					<button @click="toggleAbout">< mehr über</button>
 				</div>
@@ -17,6 +17,10 @@
 				<h5>Modelle zur Simulation</h5>
 				<p>Wir verwenden ein einfaches logistisches Modell, welchem die tagesaktuellen Daten des Robert-Koch-Instituts zugrunde liegen. Wir ermitteln die Ansteckungsrate ohne Social Distancing Maßnahmen aus dem Datensatz des Robert-Koch-Instituts und verwenden dann unsere crowd-sourced Daten um die zukünftige Ansteckungsrate zu prognostizieren. Dies ergibt eine stückweise-logistische Funktion aus der wir den Zeitpunkt abschätzen...</p>
 			</div>
+			<div class="graph infobox" ref="graph">
+				<Plot id="plot"/>
+			</div>
+			<button class="switch" v-show="!isStart" @click="toggleGraph"><span></span></button>
 		</header>
 
 		<div class="start" ref="start" v-show="isStart">
@@ -54,22 +58,32 @@
 <script>
 import Anime from 'animejs/lib/anime.es.js'
 import EmojiMap from '@/components/EmojiMap.vue'
+import Plot from '@/components/Plot.vue'
 
 export default {
 	name: 'App',
 	components: {
-		EmojiMap
+		EmojiMap,
+		Plot,
 	},
 	data () {
 		return {
 			isStart: true,
-			aboutIsOpen: false
+			aboutIsOpen: false,
+			graphIsOpen: false
 		}
+	},
+	mounted () {
+		this.$switchPoint = document.querySelector('.switch span')
 	},
 	methods: {
 		hideStart () {
 			const that = this
 			
+			const $button = document.querySelector('.about .more button')
+
+			$button.style.color = '#0000ff'
+
 			Anime({
 				targets: this.$refs.start,
 				scale: '0.9',
@@ -84,11 +98,19 @@ export default {
 		toggleAbout (ev) {
 			this.aboutIsOpen = !this.aboutIsOpen
 
+			let buttonColor = '#0000ff'
+
+			if (!this.aboutIsOpen && this.isStart) {
+				buttonColor = '#fff'
+			}
+
+			var initalButtonColor = (this.isStart ? '#0000ff' : '#fff')
+
 			Anime({
 				targets: ev.target,
 				left: this.aboutIsOpen ? ['0ch', '4ch'] : ['4ch', '0ch'],
 				translateX: this.aboutIsOpen ? ['0%', '100%'] : ['100%', '0%'],
-				color: this.aboutIsOpen ? '#0000ff' : '#ffffff',
+				color: buttonColor,
 				duration: 250,
 				easing: 'easeOutSine'
 			})
@@ -97,6 +119,31 @@ export default {
 				targets: this.$refs.about,
 				translateX: this.aboutIsOpen ? ['100%', '0%'] : ['0%', '100%'],
 				duration: 250,
+				easing: 'easeOutSine'
+			})
+		},
+		toggleGraph (ev) {
+			this.graphIsOpen = !this.graphIsOpen
+
+			Anime({
+				targets: ev.target,
+				backgroundColor: this.graphIsOpen ? '#0000ff' : '#fff',
+				duration: 200,
+				easing: 'easeOutSine'
+			})
+
+			Anime({
+				targets: this.$switchPoint,
+				marginLeft: this.graphIsOpen ? 60 : 4,
+				backgroundColor: this.graphIsOpen ? '#fff' : '#0000ff',
+				duration: 200,
+				easing: 'easeOutSine'
+			})
+
+			Anime({
+				targets: this.$refs.graph,
+				translateX: this.graphIsOpen ? ['100%', '0%'] : ['0%', '100%'],
+				duration: window.innerWidth / 2,
 				easing: 'easeOutSine'
 			})
 		}
@@ -128,15 +175,20 @@ button {
 	color: #2c3e50;
 }
 
+#plot {
+	width: 80%;
+	height: 60%;
+}
+
 .head {
 	position: absolute;
-	z-index: 99;
+	z-index: 9999;
 	display: flex;
 	top: 0;
 	left: 0;
 	right: 0;
 	padding: 1.5vw 2vw;
-	color: #fff;
+	color: #0000ff;
 
 	.title {
 		font-size: 40px;
@@ -154,11 +206,11 @@ button {
 			position: relative;
 			font-size: 20px;
 			font-weight: 700;
-			color: #fff
+			color: #0000ff
 		}
 	}
 
-	.about {
+	.infobox {
 		position: absolute;
 		top: 0;
 		right: 0;
@@ -168,6 +220,46 @@ button {
 		color: #0000ff;
 		background-color: #fff;
 		transform: translateX(100%);
+		border-radius: 30px 0px 0px 30px;
+
+		&.about {
+			z-index: 9;
+		}
+
+		&.graph {
+			width: 100%
+		}
+	}
+
+	&.isStart {
+		color: #fff;
+
+		.more button {
+			color: #fff;
+		}
+	}
+
+	.switch {
+		position: relative;
+		z-index: 9;
+		background-color: #fff;
+		width: 96px;
+		height: 40px;
+		border: 2px solid #0000ff;
+		border-radius: 20px;
+		line-height: 0;
+		padding: 0;
+		margin-top: 50px;
+
+		span {
+			width: 28px;
+			height: 28px;
+			display: block;
+			background: #0000ff;
+			border-radius: 50%;
+			line-height: 0;
+			margin: 0 4px;
+		}
 	}
 }
 
